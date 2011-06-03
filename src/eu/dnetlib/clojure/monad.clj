@@ -62,7 +62,7 @@
   #^{:doc "bind makes the value of the given monad available to a function.
   The function may act on the value, but it must return another monad.
   Although this cannot be enforced in Clojure."}
-  bind (fn [m _] (monad-type (force m))))
+  bind (fn [m _] (monad-type m)))
 
 (defmethod bind `MZero [m _] m)
 (defmethod bind `Monad [m f] (f (monad m)))

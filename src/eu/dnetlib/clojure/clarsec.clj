@@ -31,14 +31,14 @@
 
 (defmethod bind 'Parser
   [dm dfunc]
-  (let [m (force dm)
-        func (force dfunc)]
+  (let [m dm
+        func dfunc]
     (make-monad (monad-type m)
                 (fn [strn]
                   (let [parser (monad m)
                         result (parser strn)]
                     (if (consumed? result)
-                      ((force (monad (force (func (:value result))))) (:rest result))
+                      ((monad (func (:value result))) (:rest result))
                       result))))))
 
 (defn result [v]
@@ -48,7 +48,7 @@
   (make-monad 'Parser
               (fn opt-plus [strn]
                 (failback
-                 (first (drop-while failed? (map #((monad (force %)) strn) parsers)))
+                 (first (drop-while failed? (map #((monad %) strn) parsers)))
                  (failed)))))
 
 (defn >> [p1 p2]
@@ -104,7 +104,7 @@
 (def many1)
 
 (defn many [parser]
-  (>>== (optional (delay (many1 parser)))
+  (>>== (optional (many1 parser))
         #(if (nil? %) () %)))
 
 (defn many1 [parser]
@@ -195,7 +195,7 @@
      (stringify (lexeme (between (is-char \") (is-char \") (many (not-char \"))))))
 
 (defn parse [parser input]
-  ((monad (force parser)) input))
+  ((monad parser) input))
 
 ;;(defn -main []
 ;;  (println (parse (>> (delay letter) (delay letter)) "ca.")))
