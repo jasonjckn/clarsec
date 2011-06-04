@@ -208,7 +208,10 @@
           `(lazy-invoke (delay @(force (delay (var ~p-fn))))))]
     (cond
      (seq? sexp) (apply lazy-p-fn-fn sexp)
-     (symbol? sexp) (lazy-p-fn sexp))))
+     (symbol? sexp) (lazy-p-fn sexp)
+     :else (throw (Exception. (str "Unsupported use of m-lazy. "
+                                   "Proper use: (m-lazy identifier) or "
+                                   "(my-lazy (m-lazy (symb \"foo\")"))))))
 
 (defn parse [parser input]
   ((monad parser) input))
