@@ -194,8 +194,22 @@
 (def stringLiteral
      (stringify (lexeme (between (is-char \") (is-char \") (many (not-char \"))))))
 
+(defn lazy-invoke [d]
+  (make-monad 'Parser
+              (fn [strn]
+                ((monad (force d)) strn))))
+
+(defmacro m-lazy [sexp]
+  (let [lazy-p-fn-fn
+        (fn [p-fn-fn & args]
+          `(lazy-invoke (delay (@(force (delay (var ~p-fn-fn))) ~@args))))
+        lazy-p-fn
+        (fn [p-fn]
+          `(lazy-invoke (delay @(force (delay (var ~p-fn))))))]
+    (cond
+     (seq? sexp) (apply lazy-p-fn-fn sexp)
+     (symbol? sexp) (lazy-p-fn sexp))))
+
 (defn parse [parser input]
   ((monad parser) input))
 
-;;(defn -main []
-;;  (println (parse (>> (delay letter) (delay letter)) "ca.")))
