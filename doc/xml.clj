@@ -31,19 +31,19 @@
             (result {(keyword tag-name) contents})))
 
 (def xml
-     (let [list$ #(flatten (apply list %&))]
+     (let [list$ #(flatten (list %&))]
        (element
         (<|> (<$> #(apply merge-with list$ %) (many1 (lazy xml)))
              (stringify (many (<|> letter space)))))))
 
 (defn -main []
-    (println (:value (parse xml input))))
+    (prn (:value (parse xml input))))
 
 ;; (-main)
 
 ;; Output:
 ;; {:library 
-;;    {:book ({:author Fogus,
-;;             :title Joy of Clojure} 
-;;            {:author MIT,
-;;             :title Structured and Interpretation of Computer Programs})}}
+;;    {:book ({:author "Fogus",
+;;             :title "Joy of Clojure"} 
+;;            {:author "MIT",
+;;             :title "Structured and Interpretation of Computer Programs"})}}

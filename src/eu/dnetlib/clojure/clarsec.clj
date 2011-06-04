@@ -71,17 +71,6 @@
                      (consumed (first strn)
                                (. strn (substring 1)))))))
 
-(def eof
-     (make-monad 'Parser
-                 (fn p-eof [strn]
-                   (if (= "" strn)
-                     (consumed "" "")
-                     (failed)))))
-
-(def eol
-     (>> (optional (satisfy #(= % \return)))
-         (satisfy #(= % \newline))))
-
 (def fail (make-monad 'Parser (fn p-fail [strn] (failed))))
 
 (defn satisfy [pred]
@@ -202,6 +191,18 @@
 
 (def stringLiteral
      (stringify (lexeme (between (is-char \") (is-char \") (many (not-char \"))))))
+
+(def eof
+     (make-monad 'Parser
+                 (fn p-eof [strn]
+                   (if (= "" strn)
+                     (consumed "" "")
+                     (failed)))))
+
+(def eol
+     (>> (optional (satisfy #(= % \return)))
+         (satisfy #(= % \newline))))
+
 
 (defn force-during-parse [d]
   (make-monad 'Parser
