@@ -78,6 +78,10 @@
                      (consumed "" "")
                      (failed)))))
 
+(def eol
+     (>> (optional (satisfy #(= % \return)))
+         (satisfy #(= % \newline))))
+
 (def fail (make-monad 'Parser (fn p-fail [strn] (failed))))
 
 (defn satisfy [pred]
@@ -145,6 +149,11 @@
 (defn one-of [target-strn]
   (let [str-chars (into #{} target-strn)]
     (satisfy #(contains? str-chars %))))
+
+(defn none-of [exclusion-strn]
+  (let [str-chars (into #{} exclusion-strn)]
+    (satisfy #(not (contains? str-chars %)))))
+  
 
 (def space (one-of " \r\n\t"))
 
