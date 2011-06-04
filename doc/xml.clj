@@ -10,16 +10,12 @@
 (def input
      "    <library>
               <book>
-                  <title>Hello</title>
-                  <author>Knuth</author>
+                  <title>Joy of Clojure</title>
+                  <author>Fogus</author>
               </book>
               <book>
-                  <title>World</title>
-                  <author>Knuth</author>
-              </book>
-              <book>
-                  <title>World</title>
-                  <author>Knuth</author>
+                  <title>Structured and Interpretation of Computer Programs</title>
+                  <author>MIT</author>
               </book>
           </library>")
 
@@ -38,9 +34,16 @@
      (let [list$ #(flatten (apply list %&))]
        (element
         (<|> (<$> #(apply merge-with list$ %) (many1 (lazy xml)))
-             (stringify (many letter))))))
+             (stringify (many (<|> letter space)))))))
 
 (defn -main []
     (println (:value (parse xml input))))
 
 ;; (-main)
+
+;; Output:
+;; {:library 
+;;    {:book ({:author Fogus,
+;;             :title Joy of Clojure} 
+;;            {:author MIT,
+;;             :title Structured and Interpretation of Computer Programs})}}
