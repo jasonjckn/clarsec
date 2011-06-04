@@ -211,7 +211,7 @@
      (symbol? sexp) (lazy-p-fn sexp)
      :else (throw (Exception. (str "Unsupported use of m-lazy. "
                                    "Proper use: (m-lazy identifier) or "
-                                   "(my-lazy (m-lazy (symb \"foo\")"))))))
+                                   "(m-lazy (symb \"foo\"))"))))))
 
 (defn parse [parser input]
   ((monad parser) input))
