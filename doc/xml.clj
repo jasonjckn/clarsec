@@ -1,4 +1,4 @@
-(ns tutorial1
+(ns xml
   (:use
    [eu.dnetlib.clojure.clarsec]
    [eu.dnetlib.clojure.monad]))
