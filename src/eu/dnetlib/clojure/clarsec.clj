@@ -194,24 +194,26 @@
 (def stringLiteral
      (stringify (lexeme (between (is-char \") (is-char \") (many (not-char \"))))))
 
-(defn lazy-invoke [d]
+(defn force-during-parse [d]
   (make-monad 'Parser
               (fn [strn]
                 ((monad (force d)) strn))))
 
-(defmacro m-lazy [sexp]
+(defmacro lazy [sexp]
   (let [lazy-p-fn-fn
         (fn [p-fn-fn & args]
-          `(lazy-invoke (delay (@(force (delay (var ~p-fn-fn))) ~@args))))
+          `(force-during-parse
+            (delay (@(force (delay (var ~p-fn-fn))) ~@args))))
         lazy-p-fn
         (fn [p-fn]
-          `(lazy-invoke (delay @(force (delay (var ~p-fn))))))]
+          `(force-during-parse
+            (delay @(force (delay (var ~p-fn))))))]
     (cond
      (seq? sexp) (apply lazy-p-fn-fn sexp)
      (symbol? sexp) (lazy-p-fn sexp)
-     :else (throw (Exception. (str "Unsupported use of m-lazy. "
-                                   "Proper use: (m-lazy identifier) or "
-                                   "(m-lazy (symb \"foo\"))"))))))
+     :else (throw (Exception. (str "Unsupported use of lazy. "
+                                   "Proper use: (lazy identifier) or "
+                                   "(lazy (symb \"foo\"))"))))))
 
 (defn parse [parser input]
   ((monad parser) input))

@@ -11,7 +11,7 @@
 (deftest test-recur1
   (def recur1 
        (<|> (symb "foo")
-            (braces (m-lazy recur1))))
+            (braces (lazy recur1))))
 
   (let [parse$ #(or (:value (parse recur1 %)) :fail)]
     (is (= (parse$ "foo") "foo"))
@@ -24,7 +24,7 @@
 (deftest test-recur2
   (defn recur2 [x]
     (<|> (symb x)
-         (braces (m-lazy (recur2 x)))))
+         (braces (lazy (recur2 x)))))
 
   (let [parse$ #(or (:value (parse (recur2 "bar") %)) :fail)]
     (is (= (parse$ "bar") "bar"))
@@ -37,7 +37,7 @@
 (deftest test-recur3
   (defn recur3 [x]
     (<|> (symb (if (= (mod x 2) 0) "foo" "bar"))
-         (braces (m-lazy (recur3 (inc x))))))
+         (braces (lazy (recur3 (inc x))))))
 
   (let [parse$ #(or (:value (parse (recur3 0) %)) :fail)]
     (is (= (parse$ "foo") "foo"))
@@ -55,7 +55,7 @@
 
 (deftest test-unbound-var
   (def unbound-var)
-  (def fwdref1 (m-lazy unbound-var))
+  (def fwdref1 (lazy unbound-var))
   (def unbound-var identifier)
 
   (let [parse$ #(or (:value (parse fwdref1 %)) :fail)]
