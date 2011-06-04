@@ -4,10 +4,6 @@
    [eu.dnetlib.clojure.monad]
    [clojure.test]))
 
-
-
-
-
 (deftest test-recur1
   (def recur1 
        (<|> (symb "foo")
