@@ -62,6 +62,9 @@
 (defn <$> [f p]
   (bind p #(result (f %))))
 
+;; Applicative Programming
+(defn <* [a b] (let-bind [r a _ b] (result r)))
+
 
 (def any-token
      (make-monad 'Parser
