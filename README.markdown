@@ -18,17 +18,24 @@ The library comes with a small number of basic combinators. I hope it will be us
 forward references are a mess. I tried to maintain the DSL as simple as possible. Imagine that `structureDef` and `comma` are two already existing
 parsers, and `brackets` and `sepBy` are two combinators. I want to be able to write it like this:
 
-    (def structure 
-         (brackets (sepBy structureDef comma)))
+~~~~clojure
+(def structure 
+     (brackets (sepBy structureDef comma)))
+~~~~
 
 however, clojures `def` binding is strict and all the referenced vars have to be already defined, otherwise you get:
 
- Var example/structureDef is unbound.
+    Var example/structureDef is unbound.
 
 I'm a clojure newbie, so I don't know exactly how to avoid this. I know only of two workarounds:
 
- 1. use functions:   `(defn structure [] (brackets (sepBy (structureDef) (comma))))`
- 2. use `delay`:       `(def structure (delay (brackets (sepBy structureDef comma))))`
+~~~~clojure
+;; use functions
+(defn structure [] (brackets (sepBy (structureDef) (comma))))
+
+;; use delay
+(def structure (delay (brackets (sepBy structureDef comma))))
+~~~~
 
 I opted for the `delay`, as it allowed me to avoid all those spurious parens, and retain the illusion of a parser DSL, and put the `delay` only where needed. (or everywhere
 with a `defblabla` macro).
