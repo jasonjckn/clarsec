@@ -1,21 +1,17 @@
 # clarsec
 
-clarsec is an attempt to port Haskell Parsec to Clojure
+clarsec is an attempt to port Haskell Parsec to Clojure.
 
 This library is inspired on http://kotka.de/projects/clojure/parser.html and uses the Meikel Brandmeyer's "monad" library (slightly adapted), as I didn't understand how the Clojure contrib monad
 library works.
 
 ## Usage
 
-There is an example parser which I ported straight from a Haskell Parsec code.
-
-Basically, you should be able to write the examples on http://kotka.de/projects/clojure/parser.html.
-
-The library comes with a small number of basic combinators. I hope it will be useful.
+There is an example parser which I ported straight from the Haskell Parsec code. Basically, you should be able to write the examples on http://kotka.de/projects/clojure/parser.html. The library comes with a small number of basic combinators. I hope it will be useful.
 
 ## Caveats
 
-forward references are a mess. I tried to maintain the DSL as simple as possible. Imagine that `structureDef` and `comma` are two already existing
+Forward references are a mess. I tried to maintain the DSL as simple as possible. Imagine that `structureDef` and `comma` are two already existing
 parsers, and `brackets` and `sepBy` are two combinators. I want to be able to write it like this:
 
 ~~~~clojure
@@ -23,7 +19,7 @@ parsers, and `brackets` and `sepBy` are two combinators. I want to be able to wr
      (brackets (sepBy structureDef comma)))
 ~~~~
 
-however, clojures `def` binding is strict and all the referenced vars have to be already defined, otherwise you get:
+However, clojures `def` binding is strict and all the referenced vars have to be already defined, otherwise you get:
 
     Var example/structureDef is unbound.
 
